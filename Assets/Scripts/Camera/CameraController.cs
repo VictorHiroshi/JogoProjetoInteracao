@@ -27,6 +27,8 @@ public class CameraController : MonoBehaviour {
 	public float minOrtographicSize = 3.0f;
 	public Boundary cameraBoundaries;
 
+	[HideInInspector]public bool canMove;
+
 	private Camera m_Camera;
 	private Vector3 cameraOrigin;
 	private Vector3 clickPoint;
@@ -35,11 +37,15 @@ public class CameraController : MonoBehaviour {
 
 	void Awake () {
 		m_Camera = GetComponentInChildren<Camera> ();
+		canMove = true;
 	}
 
 	void Update () 
 	{
-		MoveCamera (0);
+		if (canMove) 
+		{
+			MoveCamera (0);
+		}
 	}
 
 	// Move the camera to look at the specified target, maintaining the actual ratio.
