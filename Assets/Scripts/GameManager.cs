@@ -10,10 +10,12 @@ public class GameManager : MonoBehaviour {
 
 	private int TrashIndex;
 	private bool toInstantiateTrash;
+	private int points;
 
 	void Awake () {
 		TrashIndex = 0;
 		toInstantiateTrash = true;
+		points = 0;
 	}
 
 	void Start()
@@ -30,6 +32,8 @@ public class GameManager : MonoBehaviour {
 		{
 			Debug.LogError ("No slingshot informed!");
 		}
+
+		Debug.Log ("Points: " + points);
 	}
 
 	void Update ()
@@ -54,6 +58,12 @@ public class GameManager : MonoBehaviour {
 	public void SetToInstantiateSameTrash()
 	{
 		toInstantiateTrash = true;
+	}
+
+	public void AddPoints(int extraPoints)
+	{
+		points += extraPoints;
+		Debug.Log ("Points: " + points);
 	}
 
 	private void InstantiateTrash ()

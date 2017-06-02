@@ -7,6 +7,7 @@ public class ThrowableObject : MonoBehaviour {
 	public float maxStretch = 2.0f;
 	public float maxTimeToWait = 3.0f;
 	public float timeToNextShot = 0.8f;
+	public int points = 5;
 
 	private GameManager gameManager;
 	private GameObject slingShot;
@@ -70,17 +71,13 @@ public class ThrowableObject : MonoBehaviour {
 	{
 		GameObject trashCan = other.gameObject;
 
-		if(trashCan.tag == "Reciclavel")
+		if(trashCan.tag == tag)
 		{
-			FallInRecyclableCan ();
+			FallInRightCan ();
 		}
-		else if (trashCan.tag == "Organicos")
+		else
 		{
-			FallInOrganicCan ();
-		}
-		else if (trashCan.tag == "LogisticaReversa")
-		{
-			FallInReverseLogisticCan ();
+			FallInWrongCan ();
 		}
 	}
 
@@ -128,23 +125,15 @@ public class ThrowableObject : MonoBehaviour {
 		m_rigidBody.position = mouseWorldPoint;
 	}
 
-	private void FallInRecyclableCan ()
+	private void FallInRightCan ()
 	{
-		Debug.Log ("Lixeira reciclavel");
 		insideCan = true;
 		StartCoroutine (PrepareNextShot ());
+		gameManager.AddPoints (points);
 	}
 
-	private void FallInOrganicCan ()
+	private void FallInWrongCan ()
 	{
-		Debug.Log ("Lixeira de organicos");
-		insideCan = true;
-		StartCoroutine (PrepareNextShot ());
-	}
-
-	private void FallInReverseLogisticCan ()
-	{
-		Debug.Log ("Lixeira de logistica reversa");
 		insideCan = true;
 		StartCoroutine (PrepareNextShot ());
 	}
