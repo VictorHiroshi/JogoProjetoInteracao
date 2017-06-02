@@ -51,6 +51,24 @@ public class ThrowableObject : MonoBehaviour {
 		}
 	}
 
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		GameObject trashCan = other.gameObject;
+
+		if(trashCan.tag == "Reciclavel")
+		{
+			FallInRecyclableCan ();
+		}
+		else if (trashCan.tag == "Organicos")
+		{
+			FallInOrganicCan ();
+		}
+		else if (trashCan.tag == "LogisticaReversa")
+		{
+			FallInReverseLogisticCan ();
+		}
+	}
+
 	void OnMouseDown()
 	{
 		m_rigidBody.isKinematic = true;
@@ -93,5 +111,20 @@ public class ThrowableObject : MonoBehaviour {
 
 		mouseWorldPoint.z = 0;
 		m_rigidBody.position = mouseWorldPoint;
+	}
+
+	private void FallInRecyclableCan ()
+	{
+		Debug.Log ("Lixeira reciclavel");
+	}
+
+	private void FallInOrganicCan ()
+	{
+		Debug.Log ("Lixeira de organicos");
+	}
+
+	private void FallInReverseLogisticCan ()
+	{
+		Debug.Log ("Lixeira de logistica reversa");
 	}
 }
