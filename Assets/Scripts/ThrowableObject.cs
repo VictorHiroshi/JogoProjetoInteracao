@@ -5,8 +5,10 @@ using UnityEngine;
 public class ThrowableObject : MonoBehaviour {
 
 	public float maxStretch = 2.0f;
-	public float timeFollowedByCamera = 2.5f;
+	public float maxTimeToWait = 3.0f;
+	public float timeToNextShot = 0.8f;
 
+	private GameManager gameManager;
 	private GameObject slingShot;
 	private Rigidbody2D m_rigidBody;
 	private SpringJoint2D m_springJoint;
@@ -17,6 +19,7 @@ public class ThrowableObject : MonoBehaviour {
 	private bool isClicked;
 	private bool launching;
 	private bool cameraFollows;
+	private bool insideCan;
 
 	void Awake () 
 	{
@@ -27,12 +30,14 @@ public class ThrowableObject : MonoBehaviour {
 		isClicked = false;
 		launching = false;
 		cameraFollows = false;
+		insideCan = false;
 	}
 
 	void Start()
 	{
 		rayToMouse = new Ray (slingShot.transform.position, Vector3.zero);
 		sqrMaxStretch = Mathf.Pow (maxStretch, 2);
+		gameManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent <GameManager> ();
 	}
 
 	void Update () 
@@ -126,29 +131,52 @@ public class ThrowableObject : MonoBehaviour {
 	private void FallInRecyclableCan ()
 	{
 		Debug.Log ("Lixeira reciclavel");
+		insideCan = true;
+		StartCoroutine (PrepareNextShot ());
 	}
 
 	private void FallInOrganicCan ()
 	{
 		Debug.Log ("Lixeira de organicos");
+		insideCan = true;
+		StartCoroutine (PrepareNextShot ());
 	}
 
 	private void FallInReverseLogisticCan ()
 	{
 		Debug.Log ("Lixeira de logistica reversa");
+		insideCan = true;
+		StartCoroutine (PrepareNextShot ());
 	}
 
 	private IEnumerator SetCameraToFollow()
 	{
-		float remainingTime = timeFollowedByCamera;
-
+		float remainingTime = maxTimeToWait;
 		while (remainingTime > 0)
 		{
 			m_Camera.MoveToTarget (transform, false);
 			remainingTime -= Time.deltaTime;
 			yield return null;
 		}
+		if (!insideCan) 
+		{
+			StartCoroutine (PrepareReshot());
+		}
+	}
 
-		m_Camera.MoveToTarget (slingShot.transform, true);
+	private IEnumerator PrepareNextShot()
+	{
+		gameManager.SetToInstantiateNextTrash ();
+		yield return new WaitForSeconds (timeToNextShot);
+		m_Camera.MoveToTarget (slingShot.transform, false);
+		Destroy (gameObject);
+	}
+
+	private IEnumerator PrepareReshot()
+	{
+		gameManager.SetToInstantiateSameTrash ();
+		yield return new WaitForSeconds (timeToNextShot);
+		m_Camera.MoveToTarget (slingShot.transform, false);
+		Destroy (gameObject);
 	}
 }
