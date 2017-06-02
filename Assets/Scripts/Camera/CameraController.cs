@@ -49,10 +49,19 @@ public class CameraController : MonoBehaviour {
 	}
 
 	// Move the camera to look at the specified target, maintaining the actual ratio.
-	public void MoveToTarget (Transform target)
+	public void MoveToTarget (Transform target, bool smooth)
 	{
-		transform.position = Vector3.SmoothDamp (transform.position, target.position, ref moveVelocity, dampTime);
-/*		transform.position = target.position;*/
+		
+		Vector3 newPosition = target.position;
+		newPosition.z = transform.position.z;
+		if(smooth)
+		{
+			transform.position = Vector3.SmoothDamp (transform.position, newPosition, ref moveVelocity, dampTime);
+		}
+		else
+		{
+			transform.position = newPosition;
+		}
 	}
 
 	public void ZoomIn()
