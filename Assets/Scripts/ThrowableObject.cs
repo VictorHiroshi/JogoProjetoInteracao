@@ -5,7 +5,6 @@ using UnityEngine;
 public class ThrowableObject : MonoBehaviour {
 
 	public float maxStretch = 2.0f;
-	public float maxTimeToWait = 3.0f;
 	public float timeToNextShot = 0.8f;
 	public int points = 5;
 
@@ -19,8 +18,8 @@ public class ThrowableObject : MonoBehaviour {
 	private float sqrMaxStretch;
 	private bool isClicked;
 	private bool launching;
-	private bool cameraFollows;
-	private bool insideCan;
+	private bool followedByCamera;
+	private bool fall;
 
 	void Awake () 
 	{
@@ -30,8 +29,8 @@ public class ThrowableObject : MonoBehaviour {
 		GetCameraController ();
 		isClicked = false;
 		launching = false;
-		cameraFollows = false;
-		insideCan = false;
+		followedByCamera = false;
+		fall = false;
 	}
 
 	void Start()
@@ -55,25 +54,30 @@ public class ThrowableObject : MonoBehaviour {
 				m_springJoint.enabled = false;
 				m_rigidBody.velocity = prevVelocity;
 				launching = false;
-				cameraFollows = true;
+				followedByCamera = true;
 			}
 			prevVelocity = m_rigidBody.velocity;
 		}
 
-		if(cameraFollows)
+		if(followedByCamera)
 		{
 			StartCoroutine (SetCameraToFollow ());
-			cameraFollows = false;
+			followedByCamera = false;
 		}
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		GameObject trashCan = other.gameObject;
+		fall = true;
+		GameObject something = other.gameObject;
 
-		if(trashCan.tag == tag)
+		if(something.tag == tag)
 		{
 			FallInRightCan ();
+		}
+		else if(something.tag == "Ground")
+		{
+			FallOnTheGround ();
 		}
 		else
 		{
@@ -127,29 +131,28 @@ public class ThrowableObject : MonoBehaviour {
 
 	private void FallInRightCan ()
 	{
-		insideCan = true;
 		StartCoroutine (PrepareNextShot ());
 		gameManager.AddPoints (points);
 	}
 
 	private void FallInWrongCan ()
 	{
-		insideCan = true;
 		StartCoroutine (PrepareNextShot ());
+		Debug.Log ("WROOOOONG!");
+	}
+
+	private void FallOnTheGround()
+	{
+		StartCoroutine (PrepareReshot ());
+		Debug.Log ("Don't throw it on the ground, fella! Try Again...");
 	}
 
 	private IEnumerator SetCameraToFollow()
 	{
-		float remainingTime = maxTimeToWait;
-		while (remainingTime > 0)
+		while (!fall)
 		{
 			m_Camera.MoveToTarget (transform, false);
-			remainingTime -= Time.deltaTime;
 			yield return null;
-		}
-		if (!insideCan) 
-		{
-			StartCoroutine (PrepareReshot());
 		}
 	}
 
