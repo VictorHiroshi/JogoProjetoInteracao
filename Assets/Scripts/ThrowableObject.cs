@@ -68,6 +68,11 @@ public class ThrowableObject : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
+		if(fall)
+		{
+			return;
+		}
+
 		fall = true;
 		GameObject something = other.gameObject;
 
