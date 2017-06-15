@@ -13,11 +13,13 @@ public class GameManager : MonoBehaviour {
 	private bool toInstantiateTrash;
 	private int points;
 	private GameObject[] trashList;
+	private HUDController hud;
 
 	void Awake () {
 		TrashIndex = 0;
 		toInstantiateTrash = true;
 		points = 0;
+		hud = gameObject.GetComponent <HUDController> ();
 	}
 
 	void Start()
@@ -38,7 +40,7 @@ public class GameManager : MonoBehaviour {
 		trashList = new GameObject[trashListSize];
 		GenerateRandomicTrashList ();
 
-		Debug.Log ("Points: " + points);
+		hud.ChangePunctuationText (points);
 	}
 
 	void Update ()
@@ -68,7 +70,7 @@ public class GameManager : MonoBehaviour {
 	public void AddPoints(int extraPoints)
 	{
 		points += extraPoints;
-		Debug.Log ("Points: " + points);
+		hud.ChangePunctuationText (points);
 	}
 
 	private void InstantiateTrash ()
@@ -81,12 +83,11 @@ public class GameManager : MonoBehaviour {
 
 	private void GameOver()
 	{
-		Debug.Log ("Game over! Total points: " + points);
+		Debug.Log ("Game over!");
 	}
 
 	private void GenerateRandomicTrashList ()
 	{
-		Debug.Log ("Generate random: " + trashObjects.Length);
 		for(int i=0; i< trashListSize; i++)
 		{
 			trashList[i] = trashObjects [Random.Range (0, trashObjects.Length)];
