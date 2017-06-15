@@ -12,7 +12,6 @@ public class ThrowableObject : MonoBehaviour {
 	private GameObject slingShot;
 	private Rigidbody2D m_rigidBody;
 	private SpringJoint2D m_springJoint;
-	private CameraController m_Camera;
 	private Ray rayToMouse;
 	private Vector2 prevVelocity;
 	private float sqrMaxStretch;
@@ -26,7 +25,6 @@ public class ThrowableObject : MonoBehaviour {
 		slingShot = GameObject.FindWithTag ("SlingShot");
 		m_rigidBody = gameObject.GetComponent <Rigidbody2D> ();
 		m_springJoint = gameObject.GetComponent <SpringJoint2D> ();
-		GetCameraController ();
 		isClicked = false;
 		launching = false;
 		followedByCamera = false;
@@ -94,7 +92,7 @@ public class ThrowableObject : MonoBehaviour {
 	{
 		m_rigidBody.isKinematic = true;
 		isClicked = true;
-		m_Camera.canMove = false;
+		GameManager.instance.m_Camera.canMove = false;
 	}
 
 	void OnMouseUp()
@@ -102,21 +100,7 @@ public class ThrowableObject : MonoBehaviour {
 		m_rigidBody.isKinematic = false;
 		isClicked = false;
 		launching = true;
-		m_Camera.canMove = true;
-	}
-
-	private void GetCameraController()
-	{
-		GameObject cameraRig = GameObject.FindWithTag ("CameraRig");
-		if(cameraRig==null)
-		{
-			Debug.LogError ("Unnable to find cameraRig");
-		}
-		m_Camera= cameraRig.GetComponent<CameraController>();
-		if(m_Camera== null)
-		{
-			Debug.LogError ("Unnable to find CameraController");
-		}
+		GameManager.instance.m_Camera.canMove = true;
 	}
 
 	private void Dragging ()
@@ -156,24 +140,22 @@ public class ThrowableObject : MonoBehaviour {
 	{
 		while (!fall)
 		{
-			m_Camera.MoveToTarget (transform, false);
+			GameManager.instance.m_Camera.MoveToTarget (transform, false);
 			yield return null;
 		}
 	}
 
 	private IEnumerator PrepareNextShot()
 	{
-		gameManager.SetToInstantiateNextTrash ();
 		yield return new WaitForSeconds (timeToNextShot);
-		m_Camera.MoveToTarget (slingShot.transform, false);
+		gameManager.SetToInstantiateNextTrash ();
 		Destroy (gameObject);
 	}
 
 	private IEnumerator PrepareReshot()
 	{
-		gameManager.SetToInstantiateSameTrash ();
 		yield return new WaitForSeconds (timeToNextShot);
-		m_Camera.MoveToTarget (slingShot.transform, false);
+		gameManager.SetToInstantiateSameTrash ();
 		Destroy (gameObject);
 	}
 }

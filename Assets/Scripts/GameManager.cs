@@ -4,22 +4,36 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+	public int secondsToRestart = 3;
 	public GameObject[] trashObjects;
 	public int trashListSize = 10;
 	public Transform spawnPoint;
 	public GameObject slingShot;
 
+	public static GameManager instance;
+
+	[HideInInspector] public CameraController m_Camera;
+
 	private int TrashIndex;
 	private bool toInstantiateTrash;
 	private int points;
+	private GameObject trashInstance;
 	private GameObject[] trashList;
 	private HUDController hud;
 
 	void Awake () {
-		TrashIndex = 0;
-		toInstantiateTrash = true;
-		points = 0;
+
+		if(instance==null)
+		{
+			instance = this;
+		}
+		else
+		{
+			Destroy (this);
+		}
+
 		hud = gameObject.GetComponent <HUDController> ();
+		GetCameraController ();
 	}
 
 	void Start()
@@ -37,16 +51,15 @@ public class GameManager : MonoBehaviour {
 			Debug.LogError ("No slingshot informed!");
 		}
 
-		trashList = new GameObject[trashListSize];
-		GenerateRandomicTrashList ();
-
-		hud.ChangePunctuationText (points);
+		Setup ();
 	}
 
 	void Update ()
 	{
 		if(TrashIndex == trashListSize)
 		{
+			TrashIndex = 0;
+			toInstantiateTrash = false;
 			GameOver ();
 		}
 		else if(toInstantiateTrash)
@@ -54,6 +67,11 @@ public class GameManager : MonoBehaviour {
 			InstantiateTrash ();
 			toInstantiateTrash = false;
 		}
+	}
+
+	public void RestartGame()
+	{
+		StartCoroutine (SetupRestart ());
 	}
 		
 	public void SetToInstantiateNextTrash()
@@ -70,27 +88,68 @@ public class GameManager : MonoBehaviour {
 	public void AddPoints(int extraPoints)
 	{
 		points += extraPoints;
-		hud.ChangePunctuationText (points);
+		hud.UpdatePunctuationText (points);
 	}
 
 	private void InstantiateTrash ()
 	{
 		GameObject toInstantiate = trashList [TrashIndex];
-		GameObject instance = Instantiate (toInstantiate, spawnPoint.position, spawnPoint.rotation);
-		SpringJoint2D springJoint = instance.GetComponent <SpringJoint2D> ();
+		trashInstance = Instantiate (toInstantiate, spawnPoint.position, spawnPoint.rotation);
+		SpringJoint2D springJoint = trashInstance.GetComponent <SpringJoint2D> ();
 		springJoint.connectedBody = slingShot.GetComponent <Rigidbody2D> ();
+
+		m_Camera.MoveToTarget (trashInstance.transform, false);
 	}
 
 	private void GameOver()
 	{
-		hud.ShowGameOverMessage ("Game Over!");
+		m_Camera.canMove = false;
+		hud.ShowPanelMessage ("Game Over!");
+		StartCoroutine (hud.ShowRestartButton ());
 	}
 
 	private void GenerateRandomicTrashList ()
 	{
+		trashList = new GameObject[trashListSize];
 		for(int i=0; i< trashListSize; i++)
 		{
 			trashList[i] = trashObjects [Random.Range (0, trashObjects.Length)];
 		}
 	}
+
+	private void GetCameraController()
+	{
+		GameObject cameraRig = GameObject.FindWithTag ("CameraRig");
+		if(cameraRig==null)
+		{
+			Debug.LogError ("Unnable to find cameraRig");
+		}
+		m_Camera= cameraRig.GetComponent<CameraController>();
+		if(m_Camera== null)
+		{
+			Debug.LogError ("Unnable to find CameraController");
+		}
+	}
+
+	private void Setup()
+	{
+		m_Camera.canMove = true;
+		TrashIndex = 0;
+		toInstantiateTrash = true;
+		points = 0;
+		hud.HidePanelMessage ();
+		hud.UpdatePunctuationText (points);
+		GenerateRandomicTrashList ();
+	}
+
+	private IEnumerator SetupRestart()
+	{
+		for(int i =0; i<secondsToRestart; i++)
+		{
+			hud.ShowPanelMessage ("Restarting in " + (secondsToRestart-i));
+			yield return new WaitForSeconds (1f);
+		}
+		Setup ();
+	}
+
 }
