@@ -8,16 +8,17 @@ public class HUDController : MonoBehaviour {
 	public Text punctuationText;
 	public Image messagePanelImage;
 	public Text messagePanelText;
-	public Button restartButton;
-	public float delayToShowRestartButton = 1f;
+	public Button panelButton;
+	public float delayToShowButton = 1f;
 
-	private WaitForSeconds restartDelay;
+	private WaitForSeconds showButtonDelay;
+	private ThrowableObject trashShowingMessage;
 
 	void Awake()
 	{
 		punctuationText.text = string.Empty;
 		HidePanelMessage ();
-		restartDelay = new WaitForSeconds (delayToShowRestartButton);
+		showButtonDelay = new WaitForSeconds (delayToShowButton);
 	}
 
 	public void UpdatePunctuationText(int newPuctuation)
@@ -28,7 +29,7 @@ public class HUDController : MonoBehaviour {
 	public void HidePanelMessage()
 	{
 		messagePanelText.text = string.Empty;
-		restartButton.gameObject.SetActive (false);
+		panelButton.gameObject.SetActive (false);
 		messagePanelImage.enabled = false;
 	}
 
@@ -38,16 +39,33 @@ public class HUDController : MonoBehaviour {
 		messagePanelImage.enabled = true;
 	}
 
-	public IEnumerator ShowRestartButton()
+	public IEnumerator ShowPanelButton(string buttonText)
 	{
-		yield return restartDelay;
-		restartButton.gameObject.SetActive (true);
-		restartButton.onClick.AddListener (RestartClick);
+		yield return showButtonDelay;
+		panelButton.GetComponentInChildren <Text> ().text = buttonText;
+		panelButton.gameObject.SetActive (true);
+		panelButton.onClick.AddListener (RestartClick);
+	}
+
+	public IEnumerator ShowPanelButton(string buttonText, ThrowableObject instance)
+	{
+		yield return showButtonDelay;
+		trashShowingMessage = instance;
+		panelButton.GetComponentInChildren <Text> ().text = buttonText;
+		panelButton.gameObject.SetActive (true);
+		panelButton.onClick.AddListener (ShowingThrowableMessage);
 	}
 
 	private void RestartClick()
 	{
-		restartButton.gameObject.SetActive (false);
+		panelButton.gameObject.SetActive (false);
 		GameManager.instance.RestartGame ();
+	}
+
+	private void ShowingThrowableMessage()
+	{
+		HidePanelMessage ();
+		panelButton.gameObject.SetActive (false);
+		trashShowingMessage.ReadMessageOnPanel ();
 	}
 }

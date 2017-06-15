@@ -8,7 +8,6 @@ public class ThrowableObject : MonoBehaviour {
 	public float timeToNextShot = 0.8f;
 	public int points = 5;
 
-	private GameManager gameManager;
 	private GameObject slingShot;
 	private Rigidbody2D m_rigidBody;
 	private SpringJoint2D m_springJoint;
@@ -19,6 +18,7 @@ public class ThrowableObject : MonoBehaviour {
 	private bool launching;
 	private bool followedByCamera;
 	private bool fall;
+	private bool showingMessage;
 
 	void Awake () 
 	{
@@ -29,13 +29,13 @@ public class ThrowableObject : MonoBehaviour {
 		launching = false;
 		followedByCamera = false;
 		fall = false;
+		showingMessage = false;
 	}
 
 	void Start()
 	{
 		rayToMouse = new Ray (slingShot.transform.position, Vector3.zero);
 		sqrMaxStretch = Mathf.Pow (maxStretch, 2);
-		gameManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent <GameManager> ();
 	}
 
 	void Update () 
@@ -103,6 +103,11 @@ public class ThrowableObject : MonoBehaviour {
 		GameManager.instance.m_Camera.canMove = true;
 	}
 
+	public void ReadMessageOnPanel()
+	{
+		showingMessage = false;
+	}
+
 	private void Dragging ()
 	{
 		Vector3 mouseWorldPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
@@ -121,18 +126,21 @@ public class ThrowableObject : MonoBehaviour {
 	private void FallInRightCan ()
 	{
 		StartCoroutine (PrepareNextShot ());
-		gameManager.AddPoints (points);
+		GameManager.instance.AddPoints (points);
 	}
 
 	private void FallInWrongCan ()
 	{
-		StartCoroutine (PrepareNextShot ());
+		showingMessage = true;
+		StartCoroutine (ShowWrongCanMessage ());
 		Debug.Log ("WROOOOONG!");
 	}
 
 	private void FallOnTheGround()
 	{
-		StartCoroutine (PrepareReshot ());
+		showingMessage = true;
+		GameManager.instance.AddPoints (-1);
+		StartCoroutine (ShowGroundMessage ());
 		Debug.Log ("Don't throw it on the ground, fella! Try Again...");
 	}
 
@@ -148,14 +156,34 @@ public class ThrowableObject : MonoBehaviour {
 	private IEnumerator PrepareNextShot()
 	{
 		yield return new WaitForSeconds (timeToNextShot);
-		gameManager.SetToInstantiateNextTrash ();
+		GameManager.instance.SetToInstantiateNextTrash ();
 		Destroy (gameObject);
 	}
 
 	private IEnumerator PrepareReshot()
 	{
 		yield return new WaitForSeconds (timeToNextShot);
-		gameManager.SetToInstantiateSameTrash ();
+		GameManager.instance.SetToInstantiateSameTrash ();
 		Destroy (gameObject);
+	}
+
+	private IEnumerator ShowWrongCanMessage()
+	{
+		GameManager.instance.ShowWrongCanMessage ("Lixeira errada!", "Ok", this);
+		while(showingMessage)
+		{
+			yield return null;
+		}
+		StartCoroutine (PrepareNextShot ());
+	}
+
+	private IEnumerator ShowGroundMessage()
+	{
+		GameManager.instance.ShowWrongCanMessage ("Não jogue lixo no chão. Tente novamente!", "Ok", this);
+		while(showingMessage)
+		{
+			yield return null;
+		}
+		StartCoroutine (PrepareReshot ());
 	}
 }

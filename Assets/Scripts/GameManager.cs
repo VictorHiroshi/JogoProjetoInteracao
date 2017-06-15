@@ -91,6 +91,13 @@ public class GameManager : MonoBehaviour {
 		hud.UpdatePunctuationText (points);
 	}
 
+	public void ShowWrongCanMessage(string message, string buttonText, ThrowableObject instance)
+	{
+		m_Camera.canMove = false;
+		hud.ShowPanelMessage (message);
+		StartCoroutine (hud.ShowPanelButton (buttonText, instance));
+	}
+
 	private void InstantiateTrash ()
 	{
 		GameObject toInstantiate = trashList [TrashIndex];
@@ -105,7 +112,7 @@ public class GameManager : MonoBehaviour {
 	{
 		m_Camera.canMove = false;
 		hud.ShowPanelMessage ("Game Over!");
-		StartCoroutine (hud.ShowRestartButton ());
+		StartCoroutine (hud.ShowPanelButton ("Recomeçar"));
 	}
 
 	private void GenerateRandomicTrashList ()
