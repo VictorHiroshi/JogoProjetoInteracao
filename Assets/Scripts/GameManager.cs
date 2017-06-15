@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour {
 
 	private void GameOver()
 	{
-		Debug.Log ("Game over!");
+		hud.ShowGameOverMessage ("Game Over!");
 	}
 
 	private void GenerateRandomicTrashList ()
