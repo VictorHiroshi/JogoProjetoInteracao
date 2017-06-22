@@ -64,13 +64,14 @@ public class GameManager : MonoBehaviour {
 		}
 		else if(toInstantiateTrash)
 		{
-			InstantiateTrash ();
 			toInstantiateTrash = false;
+			InstantiateTrash ();
 		}
 	}
 
 	public void RestartGame()
 	{
+		Debug.Log ("Restarting game");
 		StartCoroutine (SetupRestart ());
 	}
 		
@@ -112,7 +113,7 @@ public class GameManager : MonoBehaviour {
 	{
 		m_Camera.canMove = false;
 		hud.ShowPanelMessage ("Game Over!");
-		StartCoroutine (hud.ShowPanelButton ("Recomeçar"));
+		StartCoroutine (hud.ShowPanelRestartButton ());
 	}
 
 	private void GenerateRandomicTrashList ()

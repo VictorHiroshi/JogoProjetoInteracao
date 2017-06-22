@@ -133,7 +133,6 @@ public class ThrowableObject : MonoBehaviour {
 	{
 		showingMessage = true;
 		StartCoroutine (ShowWrongCanMessage ());
-		Debug.Log ("WROOOOONG!");
 	}
 
 	private void FallOnTheGround()
@@ -141,7 +140,6 @@ public class ThrowableObject : MonoBehaviour {
 		showingMessage = true;
 		GameManager.instance.AddPoints (-1);
 		StartCoroutine (ShowGroundMessage ());
-		Debug.Log ("Don't throw it on the ground, fella! Try Again...");
 	}
 
 	private IEnumerator SetCameraToFollow()

@@ -39,10 +39,10 @@ public class HUDController : MonoBehaviour {
 		messagePanelImage.enabled = true;
 	}
 
-	public IEnumerator ShowPanelButton(string buttonText)
+	public IEnumerator ShowPanelRestartButton()
 	{
 		yield return showButtonDelay;
-		panelButton.GetComponentInChildren <Text> ().text = buttonText;
+		panelButton.GetComponentInChildren <Text> ().text = "Recomeçar";
 		panelButton.gameObject.SetActive (true);
 		panelButton.onClick.AddListener (RestartClick);
 	}
@@ -60,6 +60,7 @@ public class HUDController : MonoBehaviour {
 	{
 		panelButton.gameObject.SetActive (false);
 		GameManager.instance.RestartGame ();
+		panelButton.onClick.RemoveAllListeners ();
 	}
 
 	private void ShowingThrowableMessage()
@@ -67,5 +68,6 @@ public class HUDController : MonoBehaviour {
 		HidePanelMessage ();
 		panelButton.gameObject.SetActive (false);
 		trashShowingMessage.ReadMessageOnPanel ();
+		panelButton.onClick.RemoveAllListeners ();
 	}
 }
