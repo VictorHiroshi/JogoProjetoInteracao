@@ -1,9 +1,14 @@
 fileFormatVersion: 2
 guid: 8cba3528015aad4469a772e2eb8478a0
-timeCreated: 1498133832
+timeCreated: 1498240730
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: Chiclete_0
+    21300002: Chiclete_1
+    21300004: Chiclete_2
+    21300006: Chiclete_3
+    21300008: Chiclete_4
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -34,13 +39,13 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 120
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: 0
@@ -92,7 +97,72 @@ TextureImporter:
     overridden: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Chiclete_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 146
+        width: 188
+        height: 165
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Chiclete_1
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 143
+        width: 153
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Chiclete_2
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 150
+        width: 169
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Chiclete_3
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 0
+        width: 143
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Chiclete_4
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 21
+        width: 188
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline:
     - - {x: -184, y: -10.5}
       - {x: -190, y: -12.5}
@@ -103,7 +173,7 @@ TextureImporter:
       - {x: -75, y: -155.5}
       - {x: -59, y: -150.5}
       - {x: -59, y: -50.5}
-      - {x: -123, y: -10.5}
+      - {x: -116.18327, y: -19.414185}
     - - {x: 98, y: -13.5}
       - {x: -17, y: -13.5}
       - {x: -29, y: -37.5}
