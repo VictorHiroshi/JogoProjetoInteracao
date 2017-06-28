@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class HUDController : MonoBehaviour {
 
+    public Image[] TrashListMiniatureSlots;
 	public Text punctuationText;
 	public Image messagePanelImage;
 	public Text messagePanelText;
@@ -70,4 +71,23 @@ public class HUDController : MonoBehaviour {
 		trashShowingMessage.ReadMessageOnPanel ();
 		panelButton.onClick.RemoveAllListeners ();
 	}
+
+    public void UpdateTrashQueue()
+    {
+        int length = TrashListMiniatureSlots.Length;
+        GameObject[] trash = GameManager.instance.GetNextTrashInQueue(length);
+        for (int i = 0; i < length; i++)
+        {
+            if (trash[i] != null)
+            {
+                TrashListMiniatureSlots[i].sprite = trash[i].GetComponent<SpriteRenderer>().sprite;
+                TrashListMiniatureSlots[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                TrashListMiniatureSlots[i].sprite = null;
+                TrashListMiniatureSlots[i].gameObject.SetActive(false);
+            }
+        }
+    }
 }
