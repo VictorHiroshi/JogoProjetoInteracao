@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour {
 	{
 		TrashIndex ++;
 		toInstantiateTrash = true;
+        hud.UpdateTrashQueue();
 	}
 
 	public void SetToInstantiateSameTrash()
@@ -148,6 +149,7 @@ public class GameManager : MonoBehaviour {
 		hud.HidePanelMessage ();
 		hud.UpdatePunctuationText (points);
 		GenerateRandomicTrashList ();
+        hud.UpdateTrashQueue();
 	}
 
 	private IEnumerator SetupRestart()
@@ -159,5 +161,21 @@ public class GameManager : MonoBehaviour {
 		}
 		Setup ();
 	}
+
+    public GameObject[] GetNextTrashInQueue(int quantity)
+    {
+        List<GameObject> next = new List<GameObject>();
+        for (int i = 0; i < quantity; i++)
+        {
+            try
+            {
+                next.Add(trashList[TrashIndex + i]);
+            } catch (System.Exception ex)
+            {
+                next.Add(null);
+            }
+        }
+        return next.ToArray();
+    }
 
 }
