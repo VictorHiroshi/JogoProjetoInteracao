@@ -11,6 +11,7 @@ public class HUDController : MonoBehaviour {
 	public Text messagePanelText;
 	public Button panelButton;
 	public float delayToShowButton = 1f;
+	public GameObject helpPanel;
 
 	private WaitForSeconds showButtonDelay;
 	private ThrowableObject trashShowingMessage;
@@ -21,6 +22,11 @@ public class HUDController : MonoBehaviour {
 		punctuationText.text = string.Empty;
 		HidePanelMessage ();
 		showButtonDelay = new WaitForSeconds (delayToShowButton);
+	}
+
+	void Start()
+	{
+		helpPanel.SetActive (false);
 	}
 
 	public void UpdatePunctuationText(int newPuctuation)
@@ -91,4 +97,16 @@ public class HUDController : MonoBehaviour {
             }
         }
     }
+
+	public void ShowHelpPanel()
+	{
+		GameManager.instance.m_Camera.canMove = false;
+		helpPanel.SetActive (true);
+	}
+
+	public void HideHelpPanel()
+	{
+		GameManager.instance.m_Camera.canMove = true;
+		helpPanel.SetActive (false);
+	}
 }
