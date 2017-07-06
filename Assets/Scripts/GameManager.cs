@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+	public int pointsLostOnTheGround = 1;
+	public int pointsLostWrongCan = 0;
 	public int secondsToRestart = 3;
 	public GameObject[] trashObjects;
 	public int trashListSize = 10;

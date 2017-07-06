@@ -7,6 +7,8 @@ public class ThrowableObject : MonoBehaviour {
 	public float maxStretch = 2.0f;
 	public float timeToNextShot = 0.8f;
 	public int points = 5;
+	public string wrongTrashCanMessage;
+	public string rightTrashCanMessage;
 
 	private GameObject slingShot;
 	private Rigidbody2D m_rigidBody;
@@ -125,21 +127,41 @@ public class ThrowableObject : MonoBehaviour {
 
 	private void FallInRightCan ()
 	{
-		StartCoroutine (PrepareNextShot ());
 		GameManager.instance.AddPoints (points);
+		if(rightTrashCanMessage != string.Empty)
+		{
+			showingMessage = true;
+			StartCoroutine (ShowPostShotMessage (rightTrashCanMessage, PrepareNextShot ()));
+		}
+		StartCoroutine (PrepareNextShot ());
+
 	}
 
 	private void FallInWrongCan ()
 	{
 		showingMessage = true;
-		StartCoroutine (ShowWrongCanMessage ());
+		GameManager.instance.AddPoints (-(GameManager.instance.pointsLostWrongCan));
+
+		string message;
+
+		if(wrongTrashCanMessage == string.Empty)
+		{
+			message = Phrases.wrongTrashCanMessage [Random.Range (0, Phrases.wrongTrashCanMessage.Length)];
+		}
+		else
+		{
+			message = wrongTrashCanMessage;
+		}
+
+		StartCoroutine (ShowPostShotMessage (message, PrepareNextShot ()));
 	}
 
 	private void FallOnTheGround()
 	{
 		showingMessage = true;
-		GameManager.instance.AddPoints (-1);
-		StartCoroutine (ShowGroundMessage ());
+		GameManager.instance.AddPoints (-(GameManager.instance.pointsLostOnTheGround));
+		string message = Phrases.trashOnTheGroundMessage [Random.Range (0, Phrases.trashOnTheGroundMessage.Length)];
+		StartCoroutine (ShowPostShotMessage (message, PrepareReshot ()));
 	}
 
 	private IEnumerator SetCameraToFollow()
@@ -165,25 +187,15 @@ public class ThrowableObject : MonoBehaviour {
 		Destroy (gameObject);
 	}
 
-	private IEnumerator ShowWrongCanMessage()
+	private IEnumerator ShowPostShotMessage(string message, IEnumerator routine)
 	{
-		string message = Phrases.wrongTrashCanMessage [Random.Range (0, Phrases.wrongTrashCanMessage.Length)];
 		GameManager.instance.ShowWrongCanMessage (message, "Ok", this);
-		while(showingMessage)
-		{
-			yield return null;
-		}
-		StartCoroutine (PrepareNextShot ());
-	}
 
-	private IEnumerator ShowGroundMessage()
-	{
-		string message = Phrases.trashOnTheGroundMessage [Random.Range (0, Phrases.trashOnTheGroundMessage.Length)];
-		GameManager.instance.ShowWrongCanMessage (message, "Ok", this);
 		while(showingMessage)
 		{
 			yield return null;
 		}
-		StartCoroutine (PrepareReshot ());
+
+		StartCoroutine (routine);
 	}
 }
