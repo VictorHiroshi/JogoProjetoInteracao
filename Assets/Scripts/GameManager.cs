@@ -113,7 +113,8 @@ public class GameManager : MonoBehaviour {
 	private void GameOver()
 	{
 		m_Camera.canMove = false;
-		hud.ShowPanelMessage ("Game Over!");
+		string message = Phrases.gameOverMessage [Random.Range (0, Phrases.gameOverMessage.Length - 1)];
+		hud.ShowPanelMessage (message);
 		StartCoroutine (hud.ShowPanelRestartButton ());
 	}
 
@@ -156,7 +157,7 @@ public class GameManager : MonoBehaviour {
 	{
 		for(int i =0; i<secondsToRestart; i++)
 		{
-			hud.ShowPanelMessage ("Restarting in " + (secondsToRestart-i));
+			hud.ShowPanelMessage ("Recomeçando em " + (secondsToRestart-i));
 			yield return new WaitForSeconds (1f);
 		}
 		Setup ();

@@ -17,6 +17,7 @@ public class HUDController : MonoBehaviour {
 
 	void Awake()
 	{
+		messagePanelImage.gameObject.SetActive (true);
 		punctuationText.text = string.Empty;
 		HidePanelMessage ();
 		showButtonDelay = new WaitForSeconds (delayToShowButton);

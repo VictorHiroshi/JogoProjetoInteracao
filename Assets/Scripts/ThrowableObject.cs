@@ -167,7 +167,8 @@ public class ThrowableObject : MonoBehaviour {
 
 	private IEnumerator ShowWrongCanMessage()
 	{
-		GameManager.instance.ShowWrongCanMessage ("Lixeira errada!", "Ok", this);
+		string message = Phrases.wrongTrashCanMessage [Random.Range (0, Phrases.wrongTrashCanMessage.Length)];
+		GameManager.instance.ShowWrongCanMessage (message, "Ok", this);
 		while(showingMessage)
 		{
 			yield return null;
@@ -177,7 +178,8 @@ public class ThrowableObject : MonoBehaviour {
 
 	private IEnumerator ShowGroundMessage()
 	{
-		GameManager.instance.ShowWrongCanMessage ("Não jogue lixo no chão. Tente novamente!", "Ok", this);
+		string message = Phrases.trashOnTheGroundMessage [Random.Range (0, Phrases.trashOnTheGroundMessage.Length)];
+		GameManager.instance.ShowWrongCanMessage (message, "Ok", this);
 		while(showingMessage)
 		{
 			yield return null;
