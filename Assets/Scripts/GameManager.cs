@@ -110,6 +110,7 @@ public class GameManager : MonoBehaviour {
 		springJoint.connectedBody = slingShot.GetComponent <Rigidbody2D> ();
 
 		m_Camera.MoveToTarget (trashInstance.transform, false);
+		m_Camera.canMove = true;
 	}
 
 	private void GameOver()
