@@ -21,6 +21,7 @@ public class ThrowableObject : MonoBehaviour {
 	private bool followedByCamera;
 	private bool fall;
 	private bool showingMessage;
+	private bool ignoreClick;
 
 	void Awake () 
 	{
@@ -38,6 +39,7 @@ public class ThrowableObject : MonoBehaviour {
 	{
 		rayToMouse = new Ray (slingShot.transform.position, Vector3.zero);
 		sqrMaxStretch = Mathf.Pow (maxStretch, 2);
+		ignoreClick = false;
 	}
 
 	void Update () 
@@ -76,6 +78,8 @@ public class ThrowableObject : MonoBehaviour {
 		fall = true;
 		GameObject something = other.gameObject;
 
+		ignoreClick = false;
+
 		if(something.tag == tag)
 		{
 			FallInRightCan ();
@@ -92,6 +96,11 @@ public class ThrowableObject : MonoBehaviour {
 
 	void OnMouseDown()
 	{
+		if(ignoreClick)
+		{
+			return;
+		}
+
 		m_rigidBody.isKinematic = true;
 		isClicked = true;
 		GameManager.instance.m_Camera.canMove = false;
@@ -99,9 +108,15 @@ public class ThrowableObject : MonoBehaviour {
 
 	void OnMouseUp()
 	{
+		if(ignoreClick)
+		{
+			return;
+		}
+
 		m_rigidBody.isKinematic = false;
 		isClicked = false;
 		launching = true;
+		ignoreClick = true;
 		GameManager.instance.m_Camera.canMove = true;
 	}
 
