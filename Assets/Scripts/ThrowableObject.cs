@@ -155,7 +155,7 @@ public class ThrowableObject : MonoBehaviour {
 	private void FallInWrongCan ()
 	{
 		showingMessage = true;
-		GameManager.instance.AddPoints (-(GameManager.instance.pointsLostWrongCan));
+		GameManager.instance.AddPoints (GameManager.instance.pointsLostWrongCan);
 
 		string message;
 
@@ -174,7 +174,7 @@ public class ThrowableObject : MonoBehaviour {
 	private void FallOnTheGround()
 	{
 		showingMessage = true;
-		GameManager.instance.AddPoints (-(GameManager.instance.pointsLostOnTheGround));
+		GameManager.instance.AddPoints (GameManager.instance.pointsLostOnTheGround);
 		string message = Phrases.trashOnTheGroundMessage [Random.Range (0, Phrases.trashOnTheGroundMessage.Length)];
 		StartCoroutine (ShowPostShotMessage (message, PrepareReshot ()));
 	}

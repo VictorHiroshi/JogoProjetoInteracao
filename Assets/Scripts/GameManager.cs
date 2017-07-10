@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour {
 	public int trashListSize = 10;
 	public Transform spawnPoint;
 	public GameObject slingShot;
+	public bool allowNegativePoints = true;
 
 	public static GameManager instance;
 
@@ -91,6 +92,11 @@ public class GameManager : MonoBehaviour {
 
 	public void AddPoints(int extraPoints)
 	{
+		if(points == 0 && extraPoints<0 && !allowNegativePoints)
+		{
+			return;
+		}
+
 		points += extraPoints;
 		hud.UpdatePunctuationText (points);
 	}
@@ -117,6 +123,7 @@ public class GameManager : MonoBehaviour {
 	{
 		m_Camera.canMove = false;
 		string message = Phrases.gameOverMessage [Random.Range (0, Phrases.gameOverMessage.Length - 1)];
+		message += "\nPontuação: " + points;
 		hud.ShowPanelMessage (message);
 		StartCoroutine (hud.ShowPanelRestartButton ());
 	}
