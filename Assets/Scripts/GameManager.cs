@@ -74,6 +74,10 @@ public class GameManager : MonoBehaviour {
 
 	public void RestartGame()
 	{
+		if(trashInstance != null)
+		{
+			Destroy (trashInstance);
+		}
 		Debug.Log ("Restarting game");
 		StartCoroutine (SetupRestart ());
 	}
