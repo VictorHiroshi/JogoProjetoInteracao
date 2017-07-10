@@ -31,6 +31,7 @@ public class HUDController : MonoBehaviour {
 
 	public void UpdatePunctuationText(int newPuctuation)
 	{
+		Debug.Log (newPuctuation);
 		punctuationText.text = "Points: " + newPuctuation;
 	}
 
