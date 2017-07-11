@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour {
 
 	private int TrashIndex;
 	private bool toInstantiateTrash;
+	private bool restarting;
 	private int points;
 	private GameObject trashInstance;
 	private GameObject[] trashList;
@@ -74,6 +75,11 @@ public class GameManager : MonoBehaviour {
 
 	public void RestartGame()
 	{
+		if (restarting)
+		{
+			return;
+		}
+
 		if(trashInstance != null)
 		{
 			Destroy (trashInstance);
@@ -169,12 +175,16 @@ public class GameManager : MonoBehaviour {
 
 	private IEnumerator SetupRestart()
 	{
+		restarting = true;
+
 		for(int i =0; i<secondsToRestart; i++)
 		{
 			hud.ShowPanelMessage ("Recomeçando em " + (secondsToRestart-i));
 			yield return new WaitForSeconds (1f);
 		}
 		Setup ();
+
+		restarting = false;
 	}
 
     public GameObject[] GetNextTrashInQueue(int quantity)
