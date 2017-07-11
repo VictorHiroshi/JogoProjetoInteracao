@@ -103,7 +103,9 @@ public class HUDController : MonoBehaviour {
 	{
 		GameManager.instance.m_Camera.canMove = false;
 		helpPanel.SetActive (true);
-	}
+        Scrollbar scrollbar = helpPanel.GetComponentInChildren<Scrollbar>();
+        scrollbar.value = 1f;
+    }
 
 	public void HideHelpPanel()
 	{
