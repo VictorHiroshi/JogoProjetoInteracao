@@ -140,11 +140,23 @@ public class GameManager : MonoBehaviour {
 
 	private void GenerateRandomicTrashList ()
 	{
+		List<GameObject> temporaryList = new List<GameObject>() ;
+
 		trashList = new GameObject[trashListSize];
+
 		for(int i=0; i< trashListSize; i++)
 		{
-			trashList[i] = trashObjects [Random.Range (0, trashObjects.Length)];
+			GameObject instance = trashObjects [Random.Range (0, trashObjects.Length)];
+
+			while (temporaryList.Contains (instance))
+			{
+				instance = trashObjects [Random.Range (0, trashObjects.Length)];
+			}
+
+			temporaryList.Add (instance);
 		}
+
+		trashList = temporaryList.ToArray ();
 	}
 
 	private void GetCameraController()
